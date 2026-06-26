@@ -74,6 +74,9 @@ def webhook():
         callback = data["callback_query"]
         chat_id = callback["message"]["chat"]["id"]
         action = callback["data"]
+        tg_user = callback["from"]
+
+        user_label = tg_user.get("first_name", "unknown")
 
         global last_wake_time
         global last_sleep_time
@@ -94,7 +97,7 @@ def webhook():
                 "WAKE",
                 sleep_duration,
                 child_id="Maya",
-                user="Dad"
+                user=user_label
             )        
             requests.post(f"{TG_API}/sendMessage", json={
                 "chat_id": chat_id,
@@ -116,7 +119,7 @@ def webhook():
                 "SLEEP",
                 awake_duration,
                 child_id="Maya",
-                user="Dad"
+                user=user_label
             )        
             requests.post(f"{TG_API}/sendMessage", json={
                 "chat_id": chat_id,
