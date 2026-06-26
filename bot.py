@@ -1,13 +1,40 @@
 from flask import Flask, request
 from datetime import datetime
-import os
 import requests
+import json
+import gspread
+from google.oauth2.service_account import Credentials
+import os
 
 
 app = Flask(__name__)
 
 TOKEN = "8974305460:AAH6xQqM0xxfXFPDNIlHlwgFsZafLsnnYiQ"
 TG_API = f"https://api.telegram.org/bot{TOKEN}"
+
+def get_sheet():
+    creds_json = json.loads(os.environ["GOOGLE_CREDS_JSON"])
+
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
+
+    creds = Credentials.from_service_account_info(creds_json, scopes=scope)
+    client = gspread.authorize(creds)
+
+    sheet = client.open("BABY_SHEET").sheet1
+    return sheet
+
+def log_event(event_type, duration=None):
+    sheet = get_sheet()
+
+    sheet.append_row([
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        event_type,
+        str(duration) if duration else "",
+    ])
 
 # 🔥 חובה להוסיף את זה:
 last_wake_time = None
@@ -54,6 +81,7 @@ def webhook():
             now = datetime.now()
         
             message = "🟢 קמה"
+            log_event("WAKE", sleep_duration)
         
             if last_sleep_time:
                 sleep_duration = now - last_sleep_time
@@ -71,6 +99,7 @@ def webhook():
             now = datetime.now()
         
             message = "😴 הונחה לישון"
+            log_event("SLEEP", awake_duration)
         
             if last_wake_time:
                 awake_duration = now - last_wake_time
