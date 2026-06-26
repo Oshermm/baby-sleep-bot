@@ -79,22 +79,22 @@ def webhook():
 
         if action == "WAKE":
             now = datetime.now()
-        
             message = "🟢 קמה"
         
-            if last_sleep_time:
+            sleep_duration = None
+        
+            if last_sleep_time is not None:
                 sleep_duration = now - last_sleep_time
                 message += f"\n😴 ישנה: {str(sleep_duration).split('.')[0]}"
         
             last_wake_time = now
-
+        
             log_event("WAKE", sleep_duration)
         
             requests.post(f"{TG_API}/sendMessage", json={
                 "chat_id": chat_id,
                 "text": message
-            })
-        
+            })        
         
         if action == "SLEEP":
             now = datetime.now()
