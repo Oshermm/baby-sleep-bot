@@ -1,6 +1,10 @@
 from flask import Flask, request
+from datetime import datetime
 import os
 import requests
+
+last_wake_time = None
+last_sleep_time = None
 
 app = Flask(__name__)
 
@@ -41,15 +45,37 @@ def webhook():
         action = callback["data"]
 
         if action == "WAKE":
+            global last_wake_time, last_sleep_time
+            now = datetime.now()
+        
+            message = "🟢 קמה"
+        
+            if last_sleep_time:
+                sleep_duration = now - last_sleep_time
+                message += f"\n😴 ישנה: {str(sleep_duration).split('.')[0]}"
+        
+            last_wake_time = now
+        
             requests.post(f"{TG_API}/sendMessage", json={
                 "chat_id": chat_id,
-                "text": "🟢 נרשמה קמה (כאן נחשב זמן בהמשך)"
+                "text": message
             })
-
+        
+        
         if action == "SLEEP":
+            global last_wake_time, last_sleep_time
+            now = datetime.now()
+        
+            message = "😴 הונחה לישון"
+        
+            if last_wake_time:
+                awake_duration = now - last_wake_time
+                message += f"\n⏰ ערה: {str(awake_duration).split('.')[0]}"
+        
+            last_sleep_time = now
+        
             requests.post(f"{TG_API}/sendMessage", json={
                 "chat_id": chat_id,
-                "text": "😴 נרשמה השכבה (כאן נחשב זמן בהמשך)"
+                "text": message
             })
-
     return "ok", 200
