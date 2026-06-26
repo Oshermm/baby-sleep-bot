@@ -52,9 +52,16 @@ def get_last_state():
 
     for r in rows:
         if r["event"] == "WAKE":
-            last_wake = r["timestamp"]
+            last_wake = datetime.strptime(
+                r["timestamp"],
+                "%Y-%m-%d %H:%M:%S"
+            )
+
         elif r["event"] == "SLEEP":
-            last_sleep = r["timestamp"]
+            last_sleep = datetime.strptime(
+                r["timestamp"],
+                "%Y-%m-%d %H:%M:%S"
+            )
 
     return last_wake, last_sleep
 
