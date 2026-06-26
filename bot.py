@@ -9,6 +9,10 @@ app = Flask(__name__)
 TOKEN = "8974305460:AAH6xQqM0xxfXFPDNIlHlwgFsZafLsnnYiQ"
 TG_API = f"https://api.telegram.org/bot{TOKEN}"
 
+# 🔥 חובה להוסיף את זה:
+last_wake_time = None
+last_sleep_time = None
+
 
 def send_keyboard(chat_id):
     keyboard = {
