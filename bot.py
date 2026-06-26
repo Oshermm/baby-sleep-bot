@@ -64,7 +64,6 @@ def webhook():
         
         
         if action == "SLEEP":
-            global last_wake_time, last_sleep_time
             now = datetime.now()
         
             message = "😴 הונחה לישון"
