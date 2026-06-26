@@ -112,6 +112,8 @@ def webhook():
             now = datetime.now()
         
             message = "😴 הונחה לישון"
+
+            awake_duration = None
         
             if last_wake_time:
                 awake_duration = now - last_wake_time
