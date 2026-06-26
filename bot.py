@@ -11,11 +11,12 @@ def home():
 def webhook():
     data = request.get_json()
 
-    print("UPDATE FROM TELEGRAM:")
+    print("================================")
+    print("NEW UPDATE FROM TELEGRAM:")
     print(data)
+    print("================================")
 
     return "ok", 200
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
