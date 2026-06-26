@@ -12,6 +12,8 @@ app = Flask(__name__)
 TOKEN = os.environ["BOT_TOKEN"]
 TG_API = f"https://api.telegram.org/bot{TOKEN}"
 
+last_menu_message_id = None
+
 def get_sheet():
     creds_json = json.loads(os.environ["GOOGLE_CREDS_JSON"])
 
@@ -43,6 +45,8 @@ last_sleep_time = None
 
 
 def send_keyboard(chat_id):
+    global last_menu_message_id
+    
     keyboard = {
         "inline_keyboard": [
             [{"text": "🟢 קמה", "callback_data": "WAKE"}],
@@ -55,11 +59,24 @@ def send_keyboard(chat_id):
         ]
     }
 
-    requests.post(f"{TG_API}/sendMessage", json={
+    res = requests.post(f"{TG_API}/sendMessage", json={
         "chat_id": chat_id,
         "text": "בחר פעולה:",
         "reply_markup": keyboard
     })
+
+    msg_id = res.json()["result"]["message_id"]
+
+        # 2. מחיקת הקודם
+    if last_menu_message_id:
+        requests.post(f"{TG_API}/deleteMessage", json={
+            "chat_id": chat_id,
+            "message_id": last_menu_message_id
+        })
+
+    # 3. שמירת החדש
+    last_menu_message_id = msg_id
+    
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
@@ -106,7 +123,8 @@ def webhook():
             requests.post(f"{TG_API}/sendMessage", json={
                 "chat_id": chat_id,
                 "text": message
-            })        
+            })
+            send_keyboard(chat_id)
         
         if action == "SLEEP":
             now = datetime.now()
@@ -131,6 +149,7 @@ def webhook():
                 "chat_id": chat_id,
                 "text": message
             })
+            send_keyboard(chat_id)
 
         if action == "UP":
             now = datetime.now()
@@ -151,6 +170,7 @@ def webhook():
                 "chat_id": chat_id,
                 "text": message
             })
+            send_keyboard(chat_id)
 
         if action == "SLEEP_TIME":
             now = datetime.now()
@@ -165,6 +185,7 @@ def webhook():
                 "chat_id": chat_id,
                 "text": message
             })
+            send_keyboard(chat_id)
 
         if action == "AWAKE_TIME":
             now = datetime.now()
@@ -179,5 +200,6 @@ def webhook():
                 "chat_id": chat_id,
                 "text": message
             })
+            send_keyboard(chat_id)
             
     return "ok", 200
