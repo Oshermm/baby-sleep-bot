@@ -47,7 +47,6 @@ def webhook():
         action = callback["data"]
 
         if action == "WAKE":
-            global last_wake_time, last_sleep_time
             now = datetime.now()
         
             message = "🟢 קמה"
