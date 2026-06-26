@@ -132,52 +132,52 @@ def webhook():
                 "text": message
             })
 
-            if action == "UP":
-                now = datetime.now()
-                message = "🙌 הרמתי, לא נרדמה"
+        if action == "UP":
+            now = datetime.now()
+            message = "🙌 הרמתי, לא נרדמה"
+        
+            awake_duration = None
+        
+            # 👇 חשוב: תמיד מחשבים מה-wake האחרון, לא מאפסים
+            if last_wake_time:
+                awake_duration = now - last_wake_time
+                message += f"\n⏰ ערה ברצף: {str(awake_duration).split('.')[0]}"
+        
+            # ❌ לא מאפסים last_wake_time כאן!
+        
+            log_event("UP", awake_duration, child_id="Maya", user=user_label)
             
-                awake_duration = None
-            
-                # 👇 חשוב: תמיד מחשבים מה-wake האחרון, לא מאפסים
-                if last_wake_time:
-                    awake_duration = now - last_wake_time
-                    message += f"\n⏰ ערה ברצף: {str(awake_duration).split('.')[0]}"
-            
-                # ❌ לא מאפסים last_wake_time כאן!
-            
-                log_event("UP", awake_duration, child_id="Maya", user=user_label)
-                
-                requests.post(f"{TG_API}/sendMessage", json={
-                    "chat_id": chat_id,
-                    "text": message
-                })
+            requests.post(f"{TG_API}/sendMessage", json={
+                "chat_id": chat_id,
+                "text": message
+            })
 
-            if action == "SLEEP_TIME":
-                now = datetime.now()
-            
-                if last_sleep_time:
-                    duration = now - last_sleep_time
-                    message = f"💤 ישנה כבר: {str(duration).split('.')[0]}"
-                else:
-                    message = "אין נתון על שינה אחרונה"
-            
-                requests.post(f"{TG_API}/sendMessage", json={
-                    "chat_id": chat_id,
-                    "text": message
-                })
+        if action == "SLEEP_TIME":
+            now = datetime.now()
+        
+            if last_sleep_time:
+                duration = now - last_sleep_time
+                message = f"💤 ישנה כבר: {str(duration).split('.')[0]}"
+            else:
+                message = "אין נתון על שינה אחרונה"
+        
+            requests.post(f"{TG_API}/sendMessage", json={
+                "chat_id": chat_id,
+                "text": message
+            })
 
-            if action == "AWAKE_TIME":
-                now = datetime.now()
-            
-                if last_wake_time:
-                    duration = now - last_wake_time
-                    message = f"⏰ ערה כבר: {str(duration).split('.')[0]}"
-                else:
-                    message = "אין נתון על זמן ערות אחרון"
-            
-                requests.post(f"{TG_API}/sendMessage", json={
-                    "chat_id": chat_id,
-                    "text": message
-                })
+        if action == "AWAKE_TIME":
+            now = datetime.now()
+        
+            if last_wake_time:
+                duration = now - last_wake_time
+                message = f"⏰ ערה כבר: {str(duration).split('.')[0]}"
+            else:
+                message = "אין נתון על זמן ערות אחרון"
+        
+            requests.post(f"{TG_API}/sendMessage", json={
+                "chat_id": chat_id,
+                "text": message
+            })
             
     return "ok", 200
