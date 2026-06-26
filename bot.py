@@ -43,6 +43,21 @@ def log_event(event_type, duration=None, child_id="Maya", user="unknown"):
 last_wake_time = None
 last_sleep_time = None
 
+def get_last_state():
+    sheet = get_sheet()
+    rows = sheet.get_all_records()
+
+    last_wake = None
+    last_sleep = None
+
+    for r in rows:
+        if r["event"] == "WAKE":
+            last_wake = r["timestamp"]
+        elif r["event"] == "SLEEP":
+            last_sleep = r["timestamp"]
+
+    return last_wake, last_sleep
+
 
 def send_keyboard(chat_id):
     global last_menu_message_id
@@ -101,6 +116,8 @@ def webhook():
 
         global last_wake_time
         global last_sleep_time
+
+        last_wake_time, last_sleep_time = get_last_state()
 
         if action == "WAKE":
             now = datetime.now()
