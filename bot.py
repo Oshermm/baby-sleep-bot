@@ -61,6 +61,19 @@ def send_keyboard(chat_id):
         "reply_markup": keyboard
     })
 
+    msg_id = res.json()["result"]["message_id"]
+
+    # 2. מחיקת הקודם
+    if last_menu_message_id:
+        requests.post(f"{TG_API}/deleteMessage", json={
+            "chat_id": chat_id,
+            "message_id": last_menu_message_id
+        })
+
+    # 3. שמירת החדש
+    last_menu_message_id = msg_id
+    
+
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data = request.get_json()
@@ -107,6 +120,7 @@ def webhook():
                 "chat_id": chat_id,
                 "text": message
             })        
+            send_keyboard(chat_id)
         
         if action == "SLEEP":
             now = datetime.now()
@@ -131,6 +145,7 @@ def webhook():
                 "chat_id": chat_id,
                 "text": message
             })
+            send_keyboard(chat_id)
 
         if action == "UP":
             now = datetime.now()
@@ -151,6 +166,7 @@ def webhook():
                 "chat_id": chat_id,
                 "text": message
             })
+            send_keyboard(chat_id)
 
         if action == "SLEEP_TIME":
             now = datetime.now()
@@ -165,6 +181,7 @@ def webhook():
                 "chat_id": chat_id,
                 "text": message
             })
+            send_keyboard(chat_id)
 
         if action == "AWAKE_TIME":
             now = datetime.now()
@@ -179,5 +196,6 @@ def webhook():
                 "chat_id": chat_id,
                 "text": message
             })
+            send_keyboard(chat_id)
             
     return "ok", 200
