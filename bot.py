@@ -13,7 +13,8 @@ def webhook():
 
     print("================================")
     print("NEW UPDATE FROM TELEGRAM:")
-    print(data)
+    print("DATA TYPE:", type(data))
+    print("DATA:", data)
     print("================================")
 
     return "ok", 200
