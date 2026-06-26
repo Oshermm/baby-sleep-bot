@@ -9,16 +9,14 @@ def home():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    data = request.get_json()
+    raw = request.data
+    data = request.get_json(silent=True)
 
-    print("================================")
-    print("NEW UPDATE FROM TELEGRAM:")
-    print("DATA TYPE:", type(data))
-    print("DATA:", data)
-    print("================================")
+    print("RAW:", raw)
+    print("JSON:", data)
 
     return "ok", 200
-
+    
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
