@@ -1,4 +1,5 @@
 from flask import Flask
+import sys
 
 app = Flask(__name__)
 
@@ -9,4 +10,6 @@ def home():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    return "WEBHOOK HIT", 200
+    sys.stdout.write("🔥 WEBHOOK HIT FROM PYTHON\n")
+    sys.stdout.flush()
+    return "OK", 200
