@@ -3,8 +3,6 @@ from datetime import datetime
 import os
 import requests
 
-last_wake_time = None
-last_sleep_time = None
 
 app = Flask(__name__)
 
