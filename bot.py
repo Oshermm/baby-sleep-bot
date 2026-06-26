@@ -4,7 +4,7 @@ import requests
 
 app = Flask(__name__)
 
-TOKEN = "PUT_YOUR_TOKEN_HERE"
+TOKEN = "8974305460:AAH6xQqM0xxfXFPDNIlHlwgFsZafLsnnYiQ"
 TG_API = f"https://api.telegram.org/bot{TOKEN}"
 
 def send_keyboard(chat_id):
