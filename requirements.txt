@@ -2,3 +2,4 @@ flask
 gunicorn
 gspread
 google-auth
+python-telegram-bot==21.6
