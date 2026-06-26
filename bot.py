@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 
-TOKEN = "8974305460:AAH6xQqM0xxfXFPDNIlHlwgFsZafLsnnYiQ"
+TOKEN = os.environ["BOT_TOKEN"]
 TG_API = f"https://api.telegram.org/bot{TOKEN}"
 
 def get_sheet():
