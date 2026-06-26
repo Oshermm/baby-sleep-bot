@@ -27,15 +27,16 @@ def get_sheet():
     sheet = client.open("Baby Tracker").sheet1
     return sheet
 
-def log_event(event_type, duration=None):
+def log_event(event_type, duration=None, child_id="Maya", user="unknown"):
     sheet = get_sheet()
 
     sheet.append_row([
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        child_id,
         event_type,
         str(duration) if duration else "",
+        user
     ])
-
 # 🔥 חובה להוסיף את זה:
 last_wake_time = None
 last_sleep_time = None
@@ -89,8 +90,12 @@ def webhook():
         
             last_wake_time = now
         
-            log_event("WAKE", sleep_duration)
-        
+            log_event(
+                "WAKE",
+                sleep_duration,
+                child_id="Maya",
+                user="Dad"
+            )        
             requests.post(f"{TG_API}/sendMessage", json={
                 "chat_id": chat_id,
                 "text": message
@@ -107,8 +112,12 @@ def webhook():
         
             last_sleep_time = now
 
-            log_event("SLEEP", awake_duration)
-        
+            log_event(
+                "SLEEP",
+                awake_duration,
+                child_id="Maya",
+                user="Dad"
+            )        
             requests.post(f"{TG_API}/sendMessage", json={
                 "chat_id": chat_id,
                 "text": message
