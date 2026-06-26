@@ -24,7 +24,7 @@ def get_sheet():
     creds = Credentials.from_service_account_info(creds_json, scopes=scope)
     client = gspread.authorize(creds)
 
-    sheet = client.open("BABY_SHEET").sheet1
+    sheet = client.open("Baby Tracker").sheet1
     return sheet
 
 def log_event(event_type, duration=None):
