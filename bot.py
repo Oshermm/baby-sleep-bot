@@ -1,5 +1,6 @@
 from flask import Flask, request
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import requests
 import json
 import gspread
@@ -33,7 +34,7 @@ def log_event(event_type, duration=None, child_id="Maya", user="unknown"):
     sheet = get_sheet()
 
     sheet.append_row([
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        datetime.now(ZoneInfo("Europe/Rome")).strftime("%Y-%m-%d %H:%M:%S"),
         child_id,
         event_type,
         str(duration) if duration else "",
@@ -127,7 +128,7 @@ def webhook():
         last_wake_time, last_sleep_time = get_last_state()
 
         if action == "WAKE":
-            now = datetime.now()
+            now = datetime.now(ZoneInfo("Europe/Rome"))
             message = "🟢 קמה"
         
             sleep_duration = None
@@ -151,7 +152,7 @@ def webhook():
             send_keyboard(chat_id)
         
         if action == "SLEEP":
-            now = datetime.now()
+            now = datetime.now(ZoneInfo("Europe/Rome"))
         
             message = "😴 הונחה לישון"
 
@@ -176,7 +177,7 @@ def webhook():
             send_keyboard(chat_id)
 
         if action == "UP":
-            now = datetime.now()
+            now = datetime.now(ZoneInfo("Europe/Rome"))
             message = "🙌 הרמתי, לא נרדמה"
         
             awake_duration = None
@@ -197,7 +198,7 @@ def webhook():
             send_keyboard(chat_id)
 
         if action == "SLEEP_TIME":
-            now = datetime.now()
+            now = datetime.now(ZoneInfo("Europe/Rome"))
         
             if last_sleep_time:
                 duration = now - last_sleep_time
@@ -212,7 +213,7 @@ def webhook():
             send_keyboard(chat_id)
 
         if action == "AWAKE_TIME":
-            now = datetime.now()
+            now = datetime.now(ZoneInfo("Europe/Rome"))
         
             if last_wake_time:
                 duration = now - last_wake_time
