@@ -30,12 +30,26 @@ def get_sheet():
     sheet = client.open("Baby Tracker").sheet1
     return sheet
 
+def get_client():
+    creds_json = json.loads(os.environ["GOOGLE_CREDS_JSON"])
+
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
+
+    creds = Credentials.from_service_account_info(creds_json, scopes=scope)
+    return gspread.authorize(creds)
+
 def save_last_menu_message_id(msg_id):
+    client = get_client()
     sheet = client.open("Baby Tracker").worksheet("Settings")
     sheet.update("A4", str(msg_id))
 
 
 def get_last_menu_message_id():
+    client = get_client()
     sheet = client.open("Baby Tracker").worksheet("Settings")
     value = sheet.acell("A4").value
     return int(value) if value else None
