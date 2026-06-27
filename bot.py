@@ -45,7 +45,7 @@ def get_client():
 def save_last_menu_message_id(msg_id):
     client = get_client()
     sheet = client.open("Baby Tracker").worksheet("Settings")
-    sheet.update("A4", str(msg_id))
+    sheet.update_acell("A4", str(msg_id))
 
 
 def get_last_menu_message_id():
