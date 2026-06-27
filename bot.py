@@ -30,6 +30,16 @@ def get_sheet():
     sheet = client.open("Baby Tracker").sheet1
     return sheet
 
+def save_last_menu_message_id(msg_id):
+    sheet = client.open("Baby Tracker").worksheet("Settings")
+    sheet.update("A4", str(msg_id))
+
+
+def get_last_menu_message_id():
+    sheet = client.open("Baby Tracker").worksheet("Settings")
+    value = sheet.acell("A4").value
+    return int(value) if value else None
+
 def log_event(event_type, duration=None, child_id="Maya", user="unknown"):
     sheet = get_sheet()
 
@@ -68,7 +78,6 @@ def get_last_state():
 
 
 def send_keyboard(chat_id):
-    global last_menu_message_id
     
     keyboard = {
         "inline_keyboard": [
@@ -89,6 +98,7 @@ def send_keyboard(chat_id):
     })
 
     msg_id = res.json()["result"]["message_id"]
+    last_menu_message_id = get_last_menu_message_id()
 
         # 2. מחיקת הקודם
     if last_menu_message_id:
@@ -98,7 +108,7 @@ def send_keyboard(chat_id):
         })
 
     # 3. שמירת החדש
-    last_menu_message_id = msg_id
+    save_last_menu_message_id(msg_id)
     
 
 @app.route("/webhook", methods=["POST"])
