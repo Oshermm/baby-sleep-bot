@@ -56,13 +56,13 @@ def get_last_state():
             last_wake = datetime.strptime(
                 r["timestamp"],
                 "%Y-%m-%d %H:%M:%S"
-            )
+            ).replace(tzinfo=ZoneInfo("Europe/Rome"))
 
         elif r["event"] == "SLEEP":
             last_sleep = datetime.strptime(
                 r["timestamp"],
                 "%Y-%m-%d %H:%M:%S"
-            )
+            ).replace(tzinfo=ZoneInfo("Europe/Rome"))
 
     return last_wake, last_sleep
 
