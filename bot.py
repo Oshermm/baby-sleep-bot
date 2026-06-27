@@ -261,7 +261,7 @@ def webhook():
             else:
                 message = "אין נתון על שינה אחרונה"
 
-            log_event("MILK", sleep_duration, child_id="Maya", user=user_label)
+            log_event("MILK", duration, child_id="Maya", user=user_label)
         
             requests.post(f"{TG_API}/sendMessage", json={
                 "chat_id": chat_id,
