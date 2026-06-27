@@ -98,6 +98,7 @@ def send_keyboard(chat_id):
             [{"text": "🟢 קמה", "callback_data": "WAKE"}],
             [{"text": "😴 הונחה לישון", "callback_data": "SLEEP"}],
             [{"text": "🙌 הרמתי, לא נרדמה", "callback_data": "UP"}],
+            [{"text": "🥛 הנקת לילה", "callback_data": "MILK"}],
             [
                 {"text": "⏰ כמה זמן ערה", "callback_data": "AWAKE_TIME"},
                 {"text": "💤 כמה זמן ישנה", "callback_data": "SLEEP_TIME"}
@@ -244,6 +245,23 @@ def webhook():
                 message = f"⏰ ערה כבר: {str(duration).split('.')[0]}"
             else:
                 message = "אין נתון על זמן ערות אחרון"
+        
+            requests.post(f"{TG_API}/sendMessage", json={
+                "chat_id": chat_id,
+                "text": message
+            })
+            send_keyboard(chat_id)
+
+        if action == "MILK":
+            now = datetime.now(ZoneInfo("Europe/Rome"))
+        
+            if last_sleep_time:
+                duration = now - last_sleep_time
+                message = f"💤 קמה לינוק, ישנה כבר: {str(duration).split('.')[0]}"
+            else:
+                message = "אין נתון על שינה אחרונה"
+
+            log_event("MILK", sleep_duration, child_id="Maya", user=user_label)
         
             requests.post(f"{TG_API}/sendMessage", json={
                 "chat_id": chat_id,
